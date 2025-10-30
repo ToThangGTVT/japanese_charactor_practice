@@ -1,5 +1,5 @@
 {
-  "name": "Luyện Bảng Chữ Cái Tiếng Nhật",
+  "name": "Luyện Bảng Chữ Cái Tiếng Nhật.",
   "description": "Một ứng dụng web tương tác để luyện tập bảng chữ cái Hiragana và Katakana của Nhật Bản. Người dùng được hiển thị một ký tự và phải chọn Romaji tương ứng từ bốn lựa chọn. Ứng dụng theo dõi tiến trình của bạn với một trang thống kê chi tiết.",
   "requestFramePermissions": []
 }
