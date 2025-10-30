@@ -7,6 +7,7 @@ import Controls from './components/Controls';
 import QuestionCard from './components/QuestionCard';
 import Statistics from './components/Statistics';
 import Navigation from './components/Navigation';
+import { useAudio } from './useAudio';
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   return [...array].sort(() => Math.random() - 0.5);
@@ -32,6 +33,8 @@ const App: React.FC = () => {
   const [timerDuration, setTimerDuration] = useState<TimerDuration>(5);
   const [timeLeft, setTimeLeft] = useState<number>(timerDuration);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  
+  const playSound = useAudio();
 
   useEffect(() => {
     let newPool: Kana[] = [];
@@ -87,7 +90,8 @@ const App: React.FC = () => {
 
   const handleTimeUp = useCallback(() => {
     if (answered || !currentKana) return;
-
+    
+    playSound('incorrect');
     setAnswered(true);
     setSelectedAnswer(null);
 
@@ -112,7 +116,7 @@ const App: React.FC = () => {
     setTimeout(() => {
       handleNextQuestion();
     }, 2000);
-  }, [answered, currentKana, handleNextQuestion]);
+  }, [answered, currentKana, handleNextQuestion, playSound]);
 
   useEffect(() => {
     if (answered || timerDuration === 999 || view !== 'practice' || !currentKana) {
@@ -154,10 +158,17 @@ const App: React.FC = () => {
     setScore({ correct: 0, total: 0 });
   };
 
-  const handleAnswerSelect = (romaji: string) => {
+  const handleAnswerSelect = useCallback((romaji: string) => {
     if (answered || !currentKana) return;
 
     const isCorrect = romaji === currentKana.romaji;
+    
+    if (isCorrect) {
+      playSound('correct');
+    } else {
+      playSound('incorrect');
+    }
+
     setAnswered(true);
     setSelectedAnswer(romaji);
     
@@ -185,7 +196,7 @@ const App: React.FC = () => {
     setTimeout(() => {
       handleNextQuestion();
     }, 1000);
-  };
+  }, [answered, currentKana, handleNextQuestion, playSound]);
 
   const resetGame = () => {
     setScore({ correct: 0, total: 0 });
